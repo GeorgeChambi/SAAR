@@ -14,7 +14,7 @@ That's it.
 
 ## What is SAAR?
 
-SAAR is a fork of [LARBS] (https://github.com/LukeSmithxyz/LARBS), 
+SAAR is a fork of [LARBS](https://github.com/LukeSmithxyz/LARBS), 
 a script that autoinstalls and autoconfigures a 
 minimal terminal-and-vim-based Arch Linux environment 
 using suckless software. I am using this as a backup 
