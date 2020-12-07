@@ -16,7 +16,15 @@ That's it.
 
 SAAR is a fork of LARBS, a script that autoinstalls 
 and autoconfigures a minimal terminal-and-vim-based 
-Arch Linux environment using suckless software.
+Arch Linux environment using suckless software. I 
+am using this as a backup of my development environment, 
+and this installer will eventually take a different path 
+to LARBS.
+
+The reason for the rename is so that I can host this 
+installer on my personal site without any confusion. It 
+is not meant to take any credit away from Luke. You can 
+find the original [here](https://github.com/LukeSmithxyz/LARBS).
 
 SAAR was originally intended to be run on a fresh install of Arch Linux, and
 provides you with a fully configured diving-board for work or more
