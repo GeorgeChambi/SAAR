@@ -19,7 +19,7 @@ esac done
 # double check the file path to raw file
 [ -z "$progsfile" ] && progsfile="https://raw.githubusercontent.com/GeorgeChambi/SAAR/main/progs.csv"
 [ -z "$aurhelper" ] && aurhelper="yay"
-[ -z "$repobranch" ] && repobranch="main"
+[ -z "$repobranch" ] && repobranch="master"
 
 ### FUNCTIONS ###
 
