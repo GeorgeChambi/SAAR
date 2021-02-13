@@ -15,7 +15,7 @@ while getopts ":a:r:b:p:h" o; do case "${o}" in
 	*) printf "Invalid option: -%s\\n" "$OPTARG" && exit 1 ;;
 esac done
 
-[ -z "$dotfilesrepo" ] && dotfilesrepo="https://github.com/GeorgeChambi/archrice.git"
+[ -z "$dotfilesrepo" ] && dotfilesrepo="https://github.com/GeorgeChambi/voidrice.git"
 # double check the file path to raw file
 [ -z "$progsfile" ] && progsfile="https://raw.githubusercontent.com/GeorgeChambi/SAAR/main/progs.csv"
 [ -z "$aurhelper" ] && aurhelper="yay"
