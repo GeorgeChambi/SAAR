@@ -154,10 +154,10 @@ installvirtualbox (){ dialog --infobox "Installing virtualbox software..."
         if [[ "$(xrandr|grep $modename)" = "" ]];
         then
 	    #sed -i "2iThis is a testinggggg" fsdfkjhf
-            sed -i "xrandr --newmode $modename $(gtf $(echo "$vbox") | grep -oP '(?<="\s\s).+')" /home/"$name"/.xinitrc
-            sed -i "xrandr --addmode $display $modename" /home/"$name"/.xinitrc
+            sed -i "16ixrandr --newmode $modename $(gtf $(echo "$vbox") | grep -oP '(?<="\s\s).+')" /home/"$name"/.xinitrc
+            sed -i "17ixrandr --addmode $display $modename" /home/"$name"/.xinitrc
         fi
-        sed -i "xrandr --output $display --mode $modename" /home/"$name"/.xinitrc
+        sed -i "18ixrandr --output $display --mode $modename" /home/"$name"/.xinitrc
         }
 
 finalize(){ \
@@ -172,6 +172,19 @@ finalize(){ \
 # Check if vbox softare needs installing, if so check the arguments are in the correct format
 # Check if user is root on Arch distro. Install dialog.
 pacman --noconfirm --needed -Sy dialog || error "Are you sure you're running this as the root user, are on an Arch-based distribution and have an internet connection?"
+
+# Check the -v flag
+if [ "$vbox" == "null" ]
+then
+    break
+else
+    if [[ $(($(echo "$vbox" | grep -o "\s" | wc --chars) / 2 )) -ne 2 ]];
+    then
+        echo "Invalid Parameters. You need to specify parameters in the format \"width height refreshRate\""
+        echo "For example setResolution \"1920 1080 60\""
+        exit
+    fi
+fi
 
 
 # Welcome user and pick dotfiles.
@@ -235,18 +248,9 @@ git update-index --assume-unchanged "/home/$name/README.md" "/home/$name/LICENSE
 systembeepoff
 
 # Install virtual box software and set up xrandr
-if [ "$vbox" == "null" ]
+if [ "$vbox" != "null" ]
 then
-    break
-else
-    if [[ $(($(echo "$vbox" | grep -o "\s" | wc --chars) / 2 )) -ne 2 ]];
-    then
-        echo "Invalid Parameters. You need to specify parameters in the format \"width height refreshRate\""
-        echo "For example setResolution \"1920 1080 60\""
-        exit
-    fi
-else
-installvirtualbox
+    installvirtualbox
 fi
 
 # Make zsh the default shell for the user.
