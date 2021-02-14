@@ -6,12 +6,13 @@
 
 ### OPTIONS AND VARIABLES ###
 
-while getopts ":a:r:b:p:h" o; do case "${o}" in
+while getopts ":a:r:b:p:h:v:" o; do case "${o}" in
 	h) printf "Optional arguments for custom use:\\n  -r: Dotfiles repository (local file or url)\\n  -p: Dependencies and programs csv (local file or url)\\n  -a: AUR helper (must have pacman-like syntax)\\n  -h: Show this message\\n" && exit 1 ;;
 	r) dotfilesrepo=${OPTARG} && git ls-remote "$dotfilesrepo" || exit 1 ;;
 	b) repobranch=${OPTARG} ;;
 	p) progsfile=${OPTARG} ;;
 	a) aurhelper=${OPTARG} ;;
+	v) vbox=${OPTARG} ;;
 	*) printf "Invalid option: -%s\\n" "$OPTARG" && exit 1 ;;
 esac done
 
@@ -20,6 +21,7 @@ esac done
 [ -z "$progsfile" ] && progsfile="https://raw.githubusercontent.com/GeorgeChambi/SAAR/main/progs.csv"
 [ -z "$aurhelper" ] && aurhelper="yay"
 [ -z "$repobranch" ] && repobranch="master"
+[ -z "$vbox" ] && vbox="null"
 
 ### FUNCTIONS ###
 
@@ -142,6 +144,22 @@ systembeepoff() { dialog --infobox "Getting rid of that retarded error beep soun
 	rmmod pcspkr
 	echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf ;}
 
+installvirtualbox (){ dialog --infobox "Installing virtualbox software..."
+        pacman --noconfirm --needed -Sy virtualbox virtualbox-guest-iso virtualbox-host-dkms || error
+
+	# to save this, echo the 3 lines to ~/.xinitrc and it will be 1920x1080 every session :)!
+	# best option use sed "13 i text here" to input on line 13!
+        modename=$(echo "$vbox" | sed 's/\s/_/g')
+        display=$(xrandr | grep -Po '.+(?=\sconnected)')
+        if [[ "$(xrandr|grep $modename)" = "" ]];
+        then
+	    #sed -i "2iThis is a testinggggg" fsdfkjhf
+            sed -i "xrandr --newmode $modename $(gtf $(echo "$vbox") | grep -oP '(?<="\s\s).+')" /home/"$name"/.xinitrc
+            sed -i "xrandr --addmode $display $modename" /home/"$name"/.xinitrc
+        fi
+        sed -i "xrandr --output $display --mode $modename" /home/"$name"/.xinitrc
+        }
+
 finalize(){ \
 	dialog --infobox "Preparing welcome message..." 4 50
 	dialog --title "All done!" --msgbox "Congrats! Provided there were no hidden errors, the script completed successfully and all the programs and configuration files should be in place.\\n\\nTo run the new graphical environment, log out and log back in as your new user, then run the command \"startx\" to start the graphical environment (it will start automatically in tty1).\\n\\n- George" 12 80
@@ -151,8 +169,22 @@ finalize(){ \
 
 ### This is how everything happens in an intuitive format and order.
 
+# Check if vbox softare needs installing, if so check the arguments are in the correct format
+if [ "$vbox" == "null" ]
+then
+    break
+else
+    if [[ $(($(echo "$vbox" | grep -o "\s" | wc --chars) / 2 )) -ne 2 ]];
+    then
+        echo "Invalid Parameters. You need to specify parameters in the format \"width height refreshRate\""
+        echo "For example setResolution \"1920 1080 60\""
+        exit
+    fi
+fi
+
 # Check if user is root on Arch distro. Install dialog.
 pacman --noconfirm --needed -Sy dialog || error "Are you sure you're running this as the root user, are on an Arch-based distribution and have an internet connection?"
+
 
 # Welcome user and pick dotfiles.
 welcomemsg || error "User exited."
@@ -213,6 +245,12 @@ git update-index --assume-unchanged "/home/$name/README.md" "/home/$name/LICENSE
 
 # Most important command! Get rid of the beep!
 systembeepoff
+
+# Install virtual box software and set up xrandr
+if [ "$vbox" != "null" ]
+then
+    installvirtualbox
+fi
 
 # Make zsh the default shell for the user.
 chsh -s /bin/zsh "$name" >/dev/null 2>&1
