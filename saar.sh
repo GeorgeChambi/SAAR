@@ -170,18 +170,6 @@ finalize(){ \
 ### This is how everything happens in an intuitive format and order.
 
 # Check if vbox softare needs installing, if so check the arguments are in the correct format
-if [ "$vbox" == "null" ]
-then
-    break
-else
-    if [[ $(($(echo "$vbox" | grep -o "\s" | wc --chars) / 2 )) -ne 2 ]];
-    then
-        echo "Invalid Parameters. You need to specify parameters in the format \"width height refreshRate\""
-        echo "For example setResolution \"1920 1080 60\""
-        exit
-    fi
-fi
-
 # Check if user is root on Arch distro. Install dialog.
 pacman --noconfirm --needed -Sy dialog || error "Are you sure you're running this as the root user, are on an Arch-based distribution and have an internet connection?"
 
@@ -247,9 +235,18 @@ git update-index --assume-unchanged "/home/$name/README.md" "/home/$name/LICENSE
 systembeepoff
 
 # Install virtual box software and set up xrandr
-if [ "$vbox" != "null" ]
+if [ "$vbox" == "null" ]
 then
-    installvirtualbox
+    break
+else
+    if [[ $(($(echo "$vbox" | grep -o "\s" | wc --chars) / 2 )) -ne 2 ]];
+    then
+        echo "Invalid Parameters. You need to specify parameters in the format \"width height refreshRate\""
+        echo "For example setResolution \"1920 1080 60\""
+        exit
+    fi
+else
+installvirtualbox
 fi
 
 # Make zsh the default shell for the user.
