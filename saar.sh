@@ -147,17 +147,14 @@ systembeepoff() { dialog --infobox "Getting rid of that retarded error beep soun
 installvirtualbox (){ dialog --infobox "Installing virtualbox software..."
         pacman --noconfirm --needed -Sy virtualbox virtualbox-guest-iso virtualbox-host-dkms || error
 
-	# to save this, echo the 3 lines to ~/.xinitrc and it will be 1920x1080 every session :)!
-	# best option use sed "13 i text here" to input on line 13!
         modename=$(echo "$vbox" | sed 's/\s/_/g')
-        display=$(xrandr | grep -Po '.+(?=\sconnected)')
+        # display=$(xrandr | grep -Po '.+(?=\sconnected)')
         if [[ "$(xrandr|grep $modename)" = "" ]];
         then
-	    #sed -i "2iThis is a testinggggg" fsdfkjhf
             sed -i "16ixrandr --newmode $modename $(gtf $(echo "$vbox") | grep -oP '(?<="\s\s).+')" /home/"$name"/.xinitrc
-            sed -i "17ixrandr --addmode $display $modename" /home/"$name"/.xinitrc
+            sed -i "17ixrandr --addmode Virtual-1 $modename" /home/"$name"/.xinitrc
         fi
-        sed -i "18ixrandr --output $display --mode $modename" /home/"$name"/.xinitrc
+        sed -i "18ixrandr --output Virtual-1 --mode $modename" /home/"$name"/.xinitrc
         }
 
 finalize(){ \
