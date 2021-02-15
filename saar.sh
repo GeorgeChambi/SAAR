@@ -7,7 +7,7 @@
 ### OPTIONS AND VARIABLES ###
 
 while getopts ":a:r:b:p:h:v:" o; do case "${o}" in
-	h) printf "Optional arguments for custom use:\\n  -r: Dotfiles repository (local file or url)\\n  -p: Dependencies and programs csv (local file or url)\\n  -a: AUR helper (must have pacman-like syntax)\\n  -h: Show this message\\n" && exit 1 ;;
+	h) printf "Optional arguments for custom use:\\n  -r: Dotfiles repository (local file or url)\\n  -p: Dependencies and programs csv (local file or url)\\n  -a: AUR helper (must have pacman-like syntax\\n -v: Virtual box installation. Example input: sh saar.sh -v "1920 1080 60")\\n  -h: Show this message\\n" && exit 1 ;;
 	r) dotfilesrepo=${OPTARG} && git ls-remote "$dotfilesrepo" || exit 1 ;;
 	b) repobranch=${OPTARG} ;;
 	p) progsfile=${OPTARG} ;;
@@ -140,11 +140,11 @@ putgitrepo() { # Downloads a gitrepo $1 and places the files in $2 only overwrit
 	sudo -u "$name" cp -rfT "$dir" "$2"
 	}
 
-systembeepoff() { dialog --infobox "Getting rid of that retarded error beep sound..." 10 50
+systembeepoff() { dialog --infobox "Getting rid of error beep sound..." 10 50
 	rmmod pcspkr
 	echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf ;}
 
-installvirtualbox (){ dialog --infobox "Installing virtualbox software..."
+installvirtualbox (){ dialog --infobox "Installing virtualbox software..." 10 50
         pacman --noconfirm --needed -Sy virtualbox virtualbox-guest-iso virtualbox-host-dkms || error
 
         modename=$(echo "$vbox" | sed 's/\s/_/g')
@@ -166,8 +166,6 @@ finalize(){ \
 
 ### This is how everything happens in an intuitive format and order.
 
-# Check if vbox softare needs installing, if so check the arguments are in the correct format
-# Check if user is root on Arch distro. Install dialog.
 pacman --noconfirm --needed -Sy dialog || error "Are you sure you're running this as the root user, are on an Arch-based distribution and have an internet connection?"
 
 # Check the -v flag
@@ -182,7 +180,6 @@ else
         exit
     fi
 fi
-
 
 # Welcome user and pick dotfiles.
 welcomemsg || error "User exited."
@@ -249,6 +246,17 @@ if [ "$vbox" != "null" ]
 then
     installvirtualbox
 fi
+
+# Set uk keyboard layout
+echo"Section "InputClass"
+        Identifier "system-keyboard"
+        MatchIsKeyboard "on"
+        Option "XkbLayout" "gb"
+        Option "XkbModel" "pc105"
+        Option "XkbVariant" "extd"
+        Option "XkbOptions" "terminate:crtl_alt_bksp"
+EndSection
+" > /etc/X11/xorg.conf.d/00-keyboard.conf
 
 # Make zsh the default shell for the user.
 chsh -s /bin/zsh "$name" >/dev/null 2>&1

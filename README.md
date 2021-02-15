@@ -19,11 +19,11 @@ a script that autoinstalls and autoconfigures a
 minimal terminal-and-vim-based Arch Linux environment 
 using suckless software. I am using this as a backup 
 of my development environment, and this installer 
-will eventually take a different path to LARBS.
+will take a different path to LARBS.
 
-The reason for the rename is so that I can host this 
-installer on my personal site without any confusion. It 
-is not meant to take any credit away from Luke.
+LARBS vs SAAR differences:
+- -v flag virtual box installation
+- UK default keyboard
 
 SAAR was originally intended to be run on a fresh install of Arch Linux, and
 provides you with a fully configured diving-board for work or more
@@ -43,6 +43,7 @@ beginning of the script or giving the script one of these options:
 - `-p`: custom programs list/dependencies (local file or URL)
 - `-a`: a custom AUR helper (must be able to install with `-S` unless you
   change the relevant line in the script
+- `-v`: install virtual box software and set custom monitor size
 
 ### The `progs.csv` list
 
