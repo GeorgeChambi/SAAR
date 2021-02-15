@@ -248,15 +248,14 @@ then
 fi
 
 # Set uk keyboard layout
-echo"Section "InputClass"
-        Identifier "system-keyboard"
-        MatchIsKeyboard "on"
-        Option "XkbLayout" "gb"
-        Option "XkbModel" "pc105"
-        Option "XkbVariant" "extd"
-        Option "XkbOptions" "terminate:crtl_alt_bksp"
-EndSection
-" > /etc/X11/xorg.conf.d/00-keyboard.conf
+printf "Section \"InputClass\"
+        Identifier \"system-keyboard\"
+        MatchIsKeyboard \"on\"
+        Option \"XkbLayout\" \"gb\"
+        Option \"XkbModel\" \"pc105\"
+        Option \"XkbVariant\" \"extd\"
+        Option \"XkbOptions\" \"terminate:crtl_alt_bksp\"
+EndSection" > /etc/X11/xorg.conf.d/00-keyboard.conf
 
 # Make zsh the default shell for the user.
 chsh -s /bin/zsh "$name" >/dev/null 2>&1
